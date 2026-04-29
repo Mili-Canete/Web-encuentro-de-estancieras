@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Encuentro Estancieras 2027</title>
+
+  <link rel="stylesheet" href="style.css"/>
+
+  <!-- Excel export -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+
+<body>
+
+<div id="app">
+
+  <!-- HOME -->
+  <div id="home" class="page active">
+
+    <h1>Encuentro Nacional Estancieras Jeep y Baqueanos 2027</h1>
+
+    <h2 class="location">📍 San Rafael Mendoza</h2>
+
+    <h3>25 al 28 de marzo</h3>
+
+    <div class="slogan">UNA PASIÓN QUE NOS UNE</div>
+
+    <div class="buttons">
+      <button onclick="goPage('register')">INSCRIPCIÓN</button>
+      <button onclick="window.open('https://www.google.com/search?q=alojamientos+en+san+rafael+mendoza', '_blank')">ALOJAMIENTOS</button>
+      <button onclick="goPage('weather')">CLIMA</button>
+    </div>
+
+  </div>
+
+  <!-- INSCRIPCIÓN -->
+  <div id="register" class="page">
+
+    <h2>Inscripción</h2>
+
+    <input id="nombre" placeholder="Nombre y apellido"/>
+    <input id="ciudad" placeholder="Ciudad"/>
+    <input id="provincia" placeholder="Provincia"/>
+    <input id="celular" placeholder="Celular"/>
+    <input id="vehiculo" placeholder="Vehículo"/>
+    <input id="personas" type="number" placeholder="Personas"/>
+
+    <button onclick="saveInscription()">Guardar</button>
+    <button onclick="exportInscripciones()">Descargar Excel</button>
+    <button onclick="goPage('home')">Volver</button>
+
+    <h3 id="total-vehiculos"></h3>
+    <h3 id="total"></h3>
+
+  </div>
+
+  <!-- ALOJAMIENTOS -->
+
+  <button onclick="window.open('https://www.google.com/search?q=alojamientos+en+san+rafael+mendoza', '_blank')">
+  ALOJAMIENTOS
+  </button>
+  
+  <!-- CLIMA -->
+  <div id="weather" class="page">
+  <h2>Clima en San Rafael</h2>
+  <div id="weather-data">
+    <p>Cargando clima...</p>
+  </div>
+  <button onclick="goPage('home')">Volver</button>
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>

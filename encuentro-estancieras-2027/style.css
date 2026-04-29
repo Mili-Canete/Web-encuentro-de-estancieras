@@ -1,0 +1,93 @@
+html, body {
+  margin: 0;
+  font-family: Arial;
+  color: white;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+#app {
+  min-height: 100vh;
+  background-color: transparent;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Esto hace que el fondo se quede quieto al hacer scroll */
+  transition: background-image 1.5s ease-in-out; /* Transición suave */
+}
+
+/* capas oscuras */
+.page {
+  display: none;
+  background: rgba(0,0,0,0.75);
+  min-height: 100vh;
+  padding: 30px;
+}
+
+.page.active {
+  display: block;
+}
+
+/* título */
+h1 {
+  font-size: 50px;
+  font-weight: 900;
+}
+
+/* ubicación resaltada */
+.location {
+  font-size: 42px;
+  background: linear-gradient(45deg, gold, orange);
+  color: black;
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 12px;
+}
+
+/* slogan */
+.slogan {
+  font-size: 40px;
+  font-style: italic;
+  animation: flash 1.2s infinite;
+  margin: 20px;
+}
+
+@keyframes flash {
+  0% { color: red; }
+  25% { color: yellow; }
+  50% { color: lime; }
+  75% { color: cyan; }
+  100% { color: magenta; }
+}
+
+/* botones */
+button {
+  padding: 12px 20px;
+  margin: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* inputs */
+input {
+  display: block;
+  margin: 10px auto;
+  padding: 10px;
+  width: 250px;
+}
+
+#weather-data img {
+  filter: drop-shadow(0 0 10px white);
+  width: 120px;
+}
+
+#weather h2 {
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+#total, #total-vehiculos {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-size: 1.2rem;
+}
