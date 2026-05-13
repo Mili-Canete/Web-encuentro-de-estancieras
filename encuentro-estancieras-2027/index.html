@@ -7,23 +7,16 @@
 
   <link rel="stylesheet" href="style.css"/>
 
-  <!-- Excel export -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 </head>
-
 <body>
 
 <div id="app">
 
-  <!-- HOME -->
   <div id="home" class="page active">
-
+    <img src="img/logo.png" class="main-logo" alt="Logo Estancieras">
     <h1>Encuentro Nacional Estancieras Jeep y Baqueanos 2027</h1>
-
     <h2 class="location">📍 San Rafael Mendoza</h2>
-
     <h3>25 al 28 de marzo</h3>
-
     <div class="slogan">UNA PASIÓN QUE NOS UNE</div>
 
     <div class="buttons">
@@ -31,46 +24,81 @@
       <button onclick="window.open('https://www.google.com/search?q=alojamientos+en+san+rafael+mendoza', '_blank')">ALOJAMIENTOS</button>
       <button onclick="goPage('weather')">CLIMA</button>
     </div>
-
   </div>
 
-  <!-- INSCRIPCIÓN -->
   <div id="register" class="page">
-
     <h2>Inscripción</h2>
-
     <input id="nombre" placeholder="Nombre y apellido"/>
     <input id="ciudad" placeholder="Ciudad"/>
     <input id="provincia" placeholder="Provincia"/>
     <input id="celular" placeholder="Celular"/>
     <input id="vehiculo" placeholder="Vehículo"/>
     <input id="personas" type="number" placeholder="Personas"/>
+    <input type="file" id="fotoVehiculo" accept="image/*" />
+    
+    <div id="preview" style="margin: 10px auto; width: 100px; height: 100px; border: 1px solid white; display: none;">
+      <img id="imgPreview" src="" style="width: 100%; height: 100%; object-fit: cover;" />
+    </div>
 
     <button onclick="saveInscription()">Guardar</button>
-    <button onclick="exportInscripciones()">Descargar Excel</button>
     <button onclick="goPage('home')">Volver</button>
 
     <h3 id="total-vehiculos"></h3>
     <h3 id="total"></h3>
-
   </div>
 
-  <!-- ALOJAMIENTOS -->
-
-  <button onclick="window.open('https://www.google.com/search?q=alojamientos+en+san+rafael+mendoza', '_blank')">
-  ALOJAMIENTOS
-  </button>
-  
-  <!-- CLIMA -->
   <div id="weather" class="page">
-  <h2>Clima en San Rafael</h2>
-  <div id="weather-data">
-    <p>Cargando clima...</p>
-  </div>
-  <button onclick="goPage('home')">Volver</button>
-</div>
+    <h2>Clima en San Rafael</h2>
+    <div id="weather-data">
+      <p>Cargando clima...</p>
+    </div>
+    <button onclick="goPage('home')">Volver</button>
+  </div> <div id="admin" class="page">
+    <h2>Panel de Control - Administrador</h2>
+    
+    <div id="admin-auth">
+        <input type="password" id="adminPass" placeholder="Contraseña de Admin">
+        <button onclick="checkAdmin()">Ingresar</button>
+    </div>
 
+    <div id="admin-content" style="display: none;">
+        <div style="margin-bottom: 20px;">
+            <button onclick="goPage('home')">Cerrar Sesión</button>
+        </div>
+        
+        <div style="overflow-x: auto;">
+            <table id="tabla-inscriptos" style="width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.1);">
+                <thead>
+                    <tr style="background: rgba(0,0,0,0.5);">
+                        <th>Foto</th>
+                        <th>Nombre</th>
+                        <th>Vehículo</th>
+                        <th>Ciudad/Provincia</th>
+                        <th>Celular</th>
+                        <th>Personas</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-admin"></tbody>
+            </table>
+        </div>
+    </div>
+    <br>
+    <button onclick="goPage('home')">Volver al Home</button>
+  </div>
+
+  <div id="fotoModal" style="display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); text-align: center; align-items: center; justify-content: center;">
+    <span onclick="cerrarFoto()" style="position: absolute; top: 20px; right: 40px; color: white; font-size: 50px; font-weight: bold; cursor: pointer;">&times;</span>
+    <img id="fotoGrande" src="" style="max-width: 90%; max-height: 90%; border: 3px solid white; border-radius: 10px; margin: auto;">
+  </div>
+
+</div> <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 <script src="app.js"></script>
+
+<footer style="margin-top: 50px; opacity: 0.3; text-align: center;">
+    <p onclick="goPage('admin')" style="cursor: pointer;">© 2027 - Gestión Interna</p>
+</footer>
 
 </body>
 </html>

@@ -1,3 +1,18 @@
+const firebaseConfig = {
+    apiKey: "AIzaSyCYUUQEQPxOdlVAzskLdlWAQmAxHgOVA9I",
+    authDomain: "estancieras2027.firebaseapp.com",
+    databaseURL: "https://estancieras2027-default-rtdb.firebaseio.com",
+    projectId: "estancieras2027",
+    storageBucket: "estancieras2027.firebasestorage.app",
+    messagingSenderId: "647308593690",
+    appId: "1:647308593690:web:9df9c8aa35b4cc8ffd1fa3",
+    measurementId: "G-FP7DS4BNN5"
+  };
+
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
 let page = "home";
 
 const backgrounds = [
@@ -39,31 +54,86 @@ function goPage(p) {
 // storage
 let inscriptos = JSON.parse(localStorage.getItem("inscriptos")) || [];
 
-// inscripción
-function saveInscription() {
-  // Obtener valores correctamente
-  const nombre = document.getElementById("nombre").value;
-  const ciudad = document.getElementById("ciudad").value;
-  const provincia = document.getElementById("provincia").value;
-  const celular = document.getElementById("celular").value;
-  const vehiculo = document.getElementById("vehiculo").value;
-  const personas = document.getElementById("personas").value;
+let fotoBase64 = "";
 
-  if(!nombre) return alert("Por favor, poné un nombre");
+// Escuchar cuando se selecciona una foto
+document.getElementById('fotoVehiculo').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  const reader = new FileReader();
 
-  const data = {
-    nombre, ciudad, provincia, celular, vehiculo,
-    personas: Number(personas) || 0
+  reader.onloadend = () => {
+    fotoBase64 = reader.result; // Aquí se guarda la imagen como texto
+    document.getElementById('imgPreview').src = fotoBase64;
+    document.getElementById('preview').style.display = "block";
   };
 
-  inscriptos.push(data);
-  localStorage.setItem("inscriptos", JSON.stringify(inscriptos));
+  if (file) {
+    reader.readAsDataURL(file);
+  }
+});
 
+// inscripción
+function saveInscription() {
+  // 1. Obtener los elementos del DOM
+  const nombreInput = document.getElementById("nombre");
+  const ciudadInput = document.getElementById("ciudad");
+  const provinciaInput = document.getElementById("provincia");
+  const celularInput = document.getElementById("celular");
+  const vehiculoInput = document.getElementById("vehiculo");
+  const personasInput = document.getElementById("personas");
+  const fotoInput = document.getElementById("fotoVehiculo");
+
+  // 2. Validaciones básicas
+  if (!nombreInput.value.trim()) {
+    return alert("Por favor, poné un nombre y apellido.");
+  }
+
+  // 3. Crear el objeto de datos
+  const nuevaInscripcion = {
+    nombre: nombreInput.value,
+    ciudad: ciudadInput.value,
+    provincia: provinciaInput.value,
+    celular: celularInput.value,
+    vehiculo: vehiculoInput.value,
+    personas: Number(personasInput.value) || 0,
+    foto: fotoBase64, // Esta variable global se actualiza con el evento 'change' del input file
+    fecha: new Date().toLocaleString() // Para saber cuando se anotó
+  };
+
+  // GUARDAR EN FIREBASE
+  database.ref('inscriptos').push(nuevaInscripcion)
+    .then(() => {
+      alert("¡Inscripción enviada a la base de datos!");
+      limpiarCampos(); // Función para resetear los inputs
+    })
+    .catch((error) => {
+      console.error("Error al guardar:", error);
+      alert("Hubo un error al conectar con Firebase");
+    });
+
+  // 5. Feedback y actualización de la UI
   alert("¡Inscripción guardada con éxito!");
-  updateTotal();
+  updateTotal(); // Esta función ahora actualiza personas y vehículos
+
+  // 6. Limpieza completa de los campos
+  function limpiarCampos() {
+    nombreInput.value = "";
+    ciudadInput.value = "";
+    provinciaInput.value = "";
+    celularInput.value = "";
+    vehiculoInput.value = "";
+    personasInput.value = "";
+    fotoInput.value = ""; // Limpia el selector de archivos
   
-  // Limpiar campos
-  document.querySelectorAll("#register input").forEach(i => i.value = "");
+    // Limpiar la variable de la foto y ocultar el preview
+    fotoBase64 = "";
+    const previewDiv = document.getElementById('preview');
+    if (previewDiv) {
+      previewDiv.style.display = "none";
+      document.getElementById('imgPreview').src = "";
+    }
+
+}
 }
 
 
@@ -77,15 +147,6 @@ function updateTotal() {
   document.getElementById("total").innerText = "Total personas: " + total;
 }
 
-
-// export excel inscriptos
-function exportInscripciones() {
-  const ws = XLSX.utils.json_to_sheet(inscriptos);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Inscripciones");
-  XLSX.writeFile(wb, "inscriptos.xlsx");
-}
-
 // export alojamientos
 function exportAlojamientos() {
   const ws = XLSX.utils.json_to_sheet(alojamientos);
@@ -95,7 +156,7 @@ function exportAlojamientos() {
 }
 
 // init
-updateTotal();
+//updateTotal();
 
 async function getWeather() {
 
@@ -148,3 +209,118 @@ function goPage(p) {
     getWeather();
   }
 }
+
+// Configuración de Admin
+const ADMIN_PASSWORD = "Tortuga02";
+
+function checkAdmin() {
+    const pass = document.getElementById("adminPass").value;
+    if (pass === ADMIN_PASSWORD) {
+        document.getElementById("admin-auth").style.display = "none";
+        document.getElementById("admin-content").style.display = "block";
+        cargarDatosAdmin();
+    } else {
+        alert("Contraseña incorrecta");
+    }
+}
+
+function cargarDatosAdmin() {
+    const tabla = document.getElementById("lista-admin");
+    
+    // El método .on('value') de Firebase es genial: 
+    // Si alguien se inscribe en su casa, la tabla se actualiza sola en tu pantalla
+    database.ref('inscriptos').on('value', (snapshot) => {
+        tabla.innerHTML = ""; // Limpiamos para no duplicar
+        const datos = snapshot.val();
+
+        for (let id in datos) {
+            const i = datos[id];
+            const row = `
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <td>
+                        <img src="${i.foto || ''}" 
+                            onclick="verFoto('${i.foto}')" 
+                            style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px; cursor: zoom-in;" 
+                            alt="Miniatura">
+                    </td>
+                    <td>${i.nombre}</td>
+                    <td>${i.vehiculo}</td>
+                    <td>${i.ciudad}, ${i.provincia}</td>
+                    <td>${i.celular}</td>
+                    <td>${i.personas}</td>
+                    <td>
+                        <button onclick="eliminarInscripcion('${id}')" style="background: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            `;
+            tabla.innerHTML += row;
+        }
+    });
+}
+
+function verFoto(url) {
+    if (!url) return alert("Esta inscripción no tiene foto.");
+    
+    const modal = document.getElementById("fotoModal");
+    const img = document.getElementById("fotoGrande");
+    
+    img.src = url;
+    modal.style.display = "flex"; // Usamos flex para centrar la imagen
+}
+
+function cerrarFoto() {
+    document.getElementById("fotoModal").style.display = "none";
+}
+
+// Opcional: Cerrar el modal si el usuario presiona la tecla 'Esc'
+window.onkeydown = function(event) {
+    if (event.key === "Escape") {
+        cerrarFoto();
+    }
+}
+
+function eliminarInscripcion(id) {
+    if (confirm("¿Estás segura de que querés eliminar esta inscripción? Esta acción no se puede deshacer.")) {
+        database.ref('inscriptos/' + id).remove()
+            .then(() => {
+                alert("Inscripción eliminada correctamente.");
+                // No hace falta recargar, el .on('value') actualiza la tabla solo
+            })
+            .catch((error) => {
+                console.error("Error al eliminar:", error);
+                alert("No se pudo eliminar el registro.");
+            });
+    }
+}
+
+// Función para escuchar cambios en Firebase y actualizar contadores
+function escucharInscripciones() {
+    database.ref('inscriptos').on('value', (snapshot) => {
+        const datos = snapshot.val();
+        let totalPersonas = 0;
+        let totalVehiculos = 0;
+
+        if (datos) {
+            // Convertimos el objeto en un array para usar reduce o contar
+            const lista = Object.values(datos);
+            totalVehiculos = lista.length;
+            totalPersonas = lista.reduce((acc, curr) => { 
+            const cantidad = Number(curr.personas) || 0;
+            return acc + cantidad;   
+            }, 0);
+        
+          }
+        // Actualizamos los elementos del HTML (tanto en el registro como en el home si los tenés)
+        const elTotalPersonas = document.getElementById("total");
+        const elTotalVehiculos = document.getElementById("total-vehiculos");
+
+        if (elTotalPersonas) elTotalPersonas.innerText = "Total personas: " + totalPersonas;
+        if (elTotalVehiculos) elTotalVehiculos.innerText = "Total vehículos: " + totalVehiculos;
+        
+        console.log("Contadores actualizados en tiempo real");
+    });
+}
+
+escucharInscripciones();

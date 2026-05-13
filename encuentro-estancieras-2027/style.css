@@ -1,39 +1,57 @@
+/* 1. Reset y Estilos Globales */
 html, body {
   margin: 0;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   color: white;
   text-align: center;
   overflow-x: hidden;
+  background-color: #1a1a1a; /* Fondo base por si fallan las fotos */
 }
 
 #app {
   min-height: 100vh;
-  background-color: transparent;
+  background-image: url('img/canonatuel.avif'); 
   background-size: cover;
   background-position: center;
-  background-attachment: fixed; /* Esto hace que el fondo se quede quieto al hacer scroll */
-  transition: background-image 1.5s ease-in-out; /* Transición suave */
+  background-attachment: fixed;
+  transition: background-image 1.5s ease-in-out;
+  display: flex;
+  flex-direction: column;
 }
 
-/* capas oscuras */
+.main-logo {
+  max-width: 280px; /* Ajustalo a tu gusto */
+  height: auto;
+  margin-bottom: 20px;
+  /* Sombra blanca suave para que resalte sobre fotos oscuras */
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3));
+  transition: transform 0.3s ease;
+}
+
+.main-logo:hover {
+  transform: scale(1.05); /* Efecto sutil al pasar el mouse */
+}
+
+/* 2. Capas de las Páginas */
 .page {
   display: none;
-  background: rgba(0,0,0,0.75);
+  background: rgba(0, 0, 0, 0.75); /* Oscurecemos para que resalte el texto */
   min-height: 100vh;
   padding: 30px;
+  box-sizing: border-box;
 }
 
 .page.active {
   display: block;
 }
 
-/* título */
+/* 3. Tipografía y Animaciones */
 h1 {
   font-size: 50px;
   font-weight: 900;
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
 }
 
-/* ubicación resaltada */
 .location {
   font-size: 42px;
   background: linear-gradient(45deg, gold, orange);
@@ -41,9 +59,9 @@ h1 {
   display: inline-block;
   padding: 10px 20px;
   border-radius: 12px;
+  font-weight: bold;
 }
 
-/* slogan */
 .slogan {
   font-size: 40px;
   font-style: italic;
@@ -59,35 +77,69 @@ h1 {
   100% { color: magenta; }
 }
 
-/* botones */
+/* 4. Componentes (Botones, Inputs, Contadores) */
 button {
   padding: 12px 20px;
   margin: 10px;
   font-weight: bold;
   cursor: pointer;
+  border-radius: 8px;
+  border: none;
+  background: white;
+  color: black;
+  transition: transform 0.2s;
 }
 
-/* inputs */
+button:hover {
+  transform: scale(1.05);
+  background: #eee;
+}
+
 input {
   display: block;
   margin: 10px auto;
-  padding: 10px;
-  width: 250px;
+  padding: 12px;
+  width: 280px;
+  border-radius: 5px;
+  border: none;
 }
 
+#total, #total-vehiculos {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 15px;
+  border-radius: 8px;
+  margin: 10px auto;
+  width: fit-content;
+  font-size: 1.2rem;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* 5. Clima */
 #weather-data img {
   filter: drop-shadow(0 0 10px white);
   width: 120px;
 }
 
-#weather h2 {
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+/* 6. Footer (El "Acceso Secreto") */
+footer {
+  width: 100%;
+  padding: 40px 0 20px 0;
+  text-align: center;
+  /* El degradado ahora es más fuerte para asegurar legibilidad */
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+  position: relative;
+  margin-top: auto; /* Empuja el footer al fondo */
 }
 
-#total, #total-vehiculos {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 10px;
-  border-radius: 8px;
-  margin-top: 10px;
-  font-size: 1.2rem;
+footer p {
+  color: rgba(255, 255, 255, 0.5); 
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+}
+
+footer p:hover {
+  color: #ffcc00;
+  text-shadow: 0 0 8px rgba(255, 204, 0, 0.6);
 }
