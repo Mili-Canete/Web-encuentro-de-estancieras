@@ -143,3 +143,58 @@ footer p:hover {
   color: #ffcc00;
   text-shadow: 0 0 8px rgba(255, 204, 0, 0.6);
 }
+
+#slide-actual {
+  transition: opacity 0.5s ease-in-out;
+}
+
+.foto-participante-carrusel {
+    width: 350px;           /* Más grande */
+    height: 350px;          /* Proporción 1:1 (cuadrada) */
+    object-fit: cover;      /* CLAVE: Recorta la imagen para que llene el cuadrado sin deformarse */
+    border: 5px solid white; 
+    border-radius: 10px;    /* Un toque redondeado en las esquinas para que sea elegante */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease;
+}
+
+#participantes-footer {
+    min-height: 500px;      /* Le damos más espacio al contenedor para que quepan las fotos grandes */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#participantes-footer img {
+  filter: grayscale(20%);
+  transition: filter 0.3s;
+}
+
+#participantes-footer img:hover {
+  filter: grayscale(0%);
+}
+
+#fotoVehiculo {
+    background: rgba(255, 215, 0, 0.05);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+#fotoVehiculo:hover {
+    background: rgba(255, 215, 0, 0.15);
+    border-color: #ffcc00;
+    transform: scale(1.02);
+}
+
+/* Estilo para el subtítulo que agregamos */
+label[for="fotoVehiculo"] {
+    text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+    animation: pulse sutil 2s infinite;
+}
+
+@keyframes pulse-sutil {
+    0% { opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
+}

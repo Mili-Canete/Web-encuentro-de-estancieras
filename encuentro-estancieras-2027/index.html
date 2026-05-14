@@ -26,26 +26,55 @@
     </div>
   </div>
 
-  <div id="register" class="page">
-    <h2>Inscripción</h2>
-    <input id="nombre" placeholder="Nombre y apellido"/>
-    <input id="ciudad" placeholder="Ciudad"/>
-    <input id="provincia" placeholder="Provincia"/>
-    <input id="celular" placeholder="Celular"/>
-    <input id="vehiculo" placeholder="Vehículo"/>
-    <input id="personas" type="number" placeholder="Personas"/>
-    <input type="file" id="fotoVehiculo" accept="image/*" />
-    
-    <div id="preview" style="margin: 10px auto; width: 100px; height: 100px; border: 1px solid white; display: none;">
-      <img id="imgPreview" src="" style="width: 100%; height: 100%; object-fit: cover;" />
+    <div id="register" class="page">
+      <h2>Inscripción</h2>
+
+      <div id="form-inputs-container">
+          <input id="nombre" placeholder="Nombre y apellido"/>
+          <input id="ciudad" placeholder="Ciudad"/>
+          <input id="provincia" placeholder="Provincia"/>
+          <input id="celular" placeholder="Celular"/>
+          <input id="vehiculo" placeholder="Vehículo"/>
+          <input id="personas" type="number" placeholder="Personas"/>
+          <input type="file" id="fotoVehiculo" accept="image/*" />
+          
+          <div id="preview" style="margin: 10px auto; width: 100px; height: 100px; border: 1px solid white; display: none;">
+            <img id="imgPreview" src="" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+
+          <label for="fotoVehiculo" style="display: block; margin-top: 15px; color: gold; font-weight: bold; font-size: 1.1rem;">
+              📸 Subí una foto de tu vehículo:
+          </label>
+          <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 5px;">
+              (Aparecerá en el carrusel de participantes al final de la página)
+          </p>
+          <input type="file" id="fotoVehiculo" accept="image/*" style="border: 2px dashed gold; padding: 20px; width: 80%; cursor: pointer;" />
+
+          <button onclick="saveInscription()">Guardar</button>
+          <button onclick="goPage('home')">Volver</button>
+      </div>
+
+      <div id="success-message" style="display: none; padding: 20px; background: rgba(0, 128, 0, 0.2); border-radius: 15px; border: 2px dashed #25D366; margin-top: 20px;">
+          <h3>¡Inscripción Exitosa! 🎉</h3>
+          <p>Para estar al tanto de las rutas y horarios del encuentro, unite al grupo oficial:</p>
+          
+          <a href="https://chat.whatsapp.com/EYU0X7ONlaiCGjk69VdKC2" target="_blank" style="text-decoration: none;">
+              <button style="background: #25D366; color: white; border: none; padding: 15px; font-size: 18px; border-radius: 10px; cursor: pointer;">
+                  Unirse al Grupo de WhatsApp
+              </button>
+          </a>
+
+          <div style="margin: 20px 0;">
+              <p>O escaneá el QR:</p>
+              <img src="img/qr-whatsapp.jpg" alt="QR WhatsApp" style="width: 200px; border: 10px solid white; border-radius: 10px;">
+          </div>
+
+          <button onclick="resetFormAfterSuccess()" style="background: transparent; color: white; border: 1px solid white; cursor: pointer;">Volver a inscribir a alguien</button>
+      </div>
+
+      <h3 id="total-vehiculos"></h3>
+      <h3 id="total"></h3>
     </div>
-
-    <button onclick="saveInscription()">Guardar</button>
-    <button onclick="goPage('home')">Volver</button>
-
-    <h3 id="total-vehiculos"></h3>
-    <h3 id="total"></h3>
-  </div>
 
   <div id="weather" class="page">
     <h2>Clima en San Rafael</h2>
@@ -91,6 +120,15 @@
     <span onclick="cerrarFoto()" style="position: absolute; top: 20px; right: 40px; color: white; font-size: 50px; font-weight: bold; cursor: pointer;">&times;</span>
     <img id="fotoGrande" src="" style="max-width: 90%; max-height: 90%; border: 3px solid white; border-radius: 10px; margin: auto;">
   </div>
+
+  <div id="participantes-footer" style="background: rgba(0,0,0,0.8); padding: 20px; border-top: 2px solid gold; margin-top: 50px;">
+    <h2 style="color: gold; font-size: 1.5rem;">Próximos en San Rafael...</h2>
+    <div id="carousel-container" style="display: flex; align-items: center; justify-content: center; min-height: 250px;">
+        <div id="slide-actual" style="text-align: center; transition: opacity 0.5s ease;">
+            <p>Cargando aventureros...</p>
+        </div>
+    </div>
+</div>
 
 </div> <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>

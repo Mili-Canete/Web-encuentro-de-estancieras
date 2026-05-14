@@ -36,25 +36,20 @@ setInterval(() => {
 function goPage(p) {
   const targetPage = document.getElementById(p);
   
-  // Si la página no existe en el HTML, salimos de la función sin tirar error
-  if (!targetPage) return; 
+  if (!targetPage) {
+    console.warn(`La página ${p} no existe en el HTML.`);
+    return; 
+  }
 
-  // Quitamos la clase 'active' de todas las páginas
   document.querySelectorAll(".page").forEach(e => e.classList.remove("active"));
   
-  // Agregamos 'active' a la página que encontramos
   targetPage.classList.add("active");
 
-  // Si es la página de clima, ejecutamos la función de la API
+  // Si es clima, cargamos los datos
   if (p === 'weather') {
     getWeather();
   }
 }
-
-// storage
-let inscriptos = JSON.parse(localStorage.getItem("inscriptos")) || [];
-
-let fotoBase64 = "";
 
 // Escuchar cuando se selecciona una foto
 document.getElementById('fotoVehiculo').addEventListener('change', function(e) {
@@ -74,77 +69,71 @@ document.getElementById('fotoVehiculo').addEventListener('change', function(e) {
 
 // inscripción
 function saveInscription() {
-  // 1. Obtener los elementos del DOM
-  const nombreInput = document.getElementById("nombre");
-  const ciudadInput = document.getElementById("ciudad");
-  const provinciaInput = document.getElementById("provincia");
-  const celularInput = document.getElementById("celular");
-  const vehiculoInput = document.getElementById("vehiculo");
-  const personasInput = document.getElementById("personas");
-  const fotoInput = document.getElementById("fotoVehiculo");
+    const nombreInput = document.getElementById("nombre");
+    const ciudadInput = document.getElementById("ciudad");
+    const provinciaInput = document.getElementById("provincia");
+    const celularInput = document.getElementById("celular");
+    const vehiculoInput = document.getElementById("vehiculo");
+    const personasInput = document.getElementById("personas");
 
-  // 2. Validaciones básicas
-  if (!nombreInput.value.trim()) {
-    return alert("Por favor, poné un nombre y apellido.");
-  }
+    if (!nombreInput.value.trim()) {
+        return alert("Por favor, poné un nombre y apellido.");
+    }
 
-  // 3. Crear el objeto de datos
-  const nuevaInscripcion = {
-    nombre: nombreInput.value,
-    ciudad: ciudadInput.value,
-    provincia: provinciaInput.value,
-    celular: celularInput.value,
-    vehiculo: vehiculoInput.value,
-    personas: Number(personasInput.value) || 0,
-    foto: fotoBase64, // Esta variable global se actualiza con el evento 'change' del input file
-    fecha: new Date().toLocaleString() // Para saber cuando se anotó
-  };
+    const nuevaInscripcion = {
+        nombre: nombreInput.value,
+        ciudad: ciudadInput.value,
+        provincia: provinciaInput.value,
+        celular: celularInput.value,
+        vehiculo: vehiculoInput.value,
+        personas: Number(personasInput.value) || 0,
+        foto: fotoBase64,
+        fecha: new Date().toLocaleString()
+    };
 
-  // GUARDAR EN FIREBASE
-  database.ref('inscriptos').push(nuevaInscripcion)
-    .then(() => {
-      alert("¡Inscripción enviada a la base de datos!");
-      limpiarCampos(); // Función para resetear los inputs
-    })
-    .catch((error) => {
-      console.error("Error al guardar:", error);
-      alert("Hubo un error al conectar con Firebase");
-    });
+    // GUARDAR EN FIREBASE
+    database.ref('inscriptos').push(nuevaInscripcion)
+        .then(() => {
+            // 1. OCULTAMOS los inputs del formulario
+            const formContainer = document.getElementById("form-inputs-container");
+            if (formContainer) formContainer.style.display = "none";
+            
+            // 2. MOSTRAMOS el mensaje de éxito con el link de WhatsApp
+            const successMsg = document.getElementById("success-message");
+            if (successMsg) successMsg.style.display = "block";
 
-  // 5. Feedback y actualización de la UI
-  alert("¡Inscripción guardada con éxito!");
-  updateTotal(); // Esta función ahora actualiza personas y vehículos
+            // 3. Limpiamos los campos internamente
+            limpiarCampos(); 
+            
+            console.log("Inscripción exitosa y cambio de UI realizado");
+        })
+        .catch((error) => {
+            console.error("Error al guardar:", error);
+            alert("Hubo un error al enviar tu inscripción.");
+        });
+}
 
-  // 6. Limpieza completa de los campos
-  function limpiarCampos() {
-    nombreInput.value = "";
-    ciudadInput.value = "";
-    provinciaInput.value = "";
-    celularInput.value = "";
-    vehiculoInput.value = "";
-    personasInput.value = "";
-    fotoInput.value = ""; // Limpia el selector de archivos
-  
-    // Limpiar la variable de la foto y ocultar el preview
+// Sacamos la función limpiarCampos de adentro de saveInscription para que sea global
+function limpiarCampos() {
+    document.getElementById("nombre").value = "";
+    document.getElementById("ciudad").value = "";
+    document.getElementById("provincia").value = "";
+    document.getElementById("celular").value = "";
+    document.getElementById("vehiculo").value = "";
+    document.getElementById("personas").value = "";
+    document.getElementById("fotoVehiculo").value = "";
+    
     fotoBase64 = "";
     const previewDiv = document.getElementById('preview');
     if (previewDiv) {
-      previewDiv.style.display = "none";
-      document.getElementById('imgPreview').src = "";
+        previewDiv.style.display = "none";
+        document.getElementById('imgPreview').src = "";
     }
-
-}
 }
 
-
-// total personas
-function updateTotal() {
-  let total = inscriptos.reduce((a,b) => a + (b.personas || 0), 0);
-  // El total de vehículos es la cantidad de registros en la lista
-  let totalVehiculos = inscriptos.length;
-
-  document.getElementById("total-vehiculos").innerText = "Total vehículos: " + totalVehiculos;
-  document.getElementById("total").innerText = "Total personas: " + total;
+function resetFormAfterSuccess() {
+    document.getElementById("success-message").style.display = "none";
+    document.getElementById("form-inputs-container").style.display = "block";
 }
 
 // export alojamientos
@@ -154,9 +143,6 @@ function exportAlojamientos() {
   XLSX.utils.book_append_sheet(wb, ws, "Alojamientos");
   XLSX.writeFile(wb, "alojamientos.xlsx");
 }
-
-// init
-//updateTotal();
 
 async function getWeather() {
 
@@ -197,16 +183,6 @@ async function getWeather() {
     `;
   } catch (error) {
     container.innerHTML = "<p>No se pudo conectar con el servicio. Verificá tu conexión.</p>";
-  }
-}
-
-// Llamar a la función cuando el usuario entre a la página de clima
-function goPage(p) {
-  document.querySelectorAll(".page").forEach(e => e.classList.remove("active"));
-  document.getElementById(p).classList.add("active");
-  
-  if(p === 'weather') {
-    getWeather();
   }
 }
 
@@ -324,3 +300,47 @@ function escucharInscripciones() {
 }
 
 escucharInscripciones();
+
+let listaParticipantes = [];
+let slideIndex = 0;
+
+function iniciarCarrusel() {
+    database.ref('inscriptos').on('value', (snapshot) => {
+        const datos = snapshot.val();
+        if (datos) {
+            // Solo guardamos los que tienen foto
+            listaParticipantes = Object.values(datos).filter(p => p.foto);
+            if (listaParticipantes.length > 0) {
+                mostrarSiguienteParticipante();
+            }
+        }
+    });
+}
+
+function mostrarSiguienteParticipante() {
+    const contenedor = document.getElementById("slide-actual");
+    if (!contenedor || listaParticipantes.length === 0) return;
+
+    const p = listaParticipantes[slideIndex];
+    
+    // Efecto de desvanecimiento
+    contenedor.style.opacity = 0;
+
+    setTimeout(() => {
+        contenedor.innerHTML = `
+            <div style="margin-bottom: 15px;">
+                <img src="${p.foto}" class="foto-participante-carrusel">
+            </div>
+            <h4 style="margin: 5px 0; font-size: 1.5rem; color: gold;">${p.nombre}</h4>
+            <p style="color: #eee; font-size: 1.1rem; font-style: italic;">Desde: ${p.ciudad}, ${p.provincia}</p>
+        `;
+        contenedor.style.opacity = 1;
+        
+        // Pasamos al siguiente
+        slideIndex = (slideIndex + 1) % listaParticipantes.length;
+    }, 500);
+}
+
+// Iniciamos el ciclo cada 5 segundos
+setInterval(mostrarSiguienteParticipante, 5000);
+iniciarCarrusel();
