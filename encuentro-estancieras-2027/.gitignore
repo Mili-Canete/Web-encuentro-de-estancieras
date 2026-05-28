@@ -1,0 +1,10 @@
+# Entornos virtuales
+.venv/
+venv/
+
+# Variables de entorno (Contraseñas y Keys)
+.env
+.env.local
+
+# Archivos del sistema u otros
+.DS_Store
