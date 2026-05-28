@@ -1,5 +1,5 @@
 const firebaseConfig = {
-    apiKey: "AIzaSyCYUUQEQPxOdlVAzskLdlWAQmAxHgOVA9I",
+    apiKey: import.meta.env.VITE_apiKeyFirebase,
     authDomain: "estancieras2027.firebaseapp.com",
     databaseURL: "https://estancieras2027-default-rtdb.firebaseio.com",
     projectId: "estancieras2027",
@@ -149,10 +149,10 @@ async function getWeather() {
   const container = document.getElementById("weather-data");
 
   const city = "San Rafael,AR";
-  const apiKey = "1799b06e82ec55770619ed0837c2467a"; // Necesitás registrarte en openweathermap.org
+  const apiKey = import.meta.env.VITE_apiKeyWeather;
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=es`;
 
-  // Mensaje de carga con estilo
+  // Mensaje de carga
   container.innerHTML = "<p>Consultando el cielo de San Rafael...</p>";
 
   try {
@@ -187,7 +187,7 @@ async function getWeather() {
 }
 
 // Configuración de Admin
-const ADMIN_PASSWORD = "Tortuga02";
+const ADMIN_PASSWORD = import.meta.env.VITE_adminPassword;
 
 function checkAdmin() {
     const pass = document.getElementById("adminPass").value;
@@ -203,8 +203,6 @@ function checkAdmin() {
 function cargarDatosAdmin() {
     const tabla = document.getElementById("lista-admin");
     
-    // El método .on('value') de Firebase es genial: 
-    // Si alguien se inscribe en su casa, la tabla se actualiza sola en tu pantalla
     database.ref('inscriptos').on('value', (snapshot) => {
         tabla.innerHTML = ""; // Limpiamos para no duplicar
         const datos = snapshot.val();
