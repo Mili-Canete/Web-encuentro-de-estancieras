@@ -10,7 +10,7 @@ html, body {
 
 #app {
   min-height: 100vh;
-  background-image: url('img/canonatuel.avif'); 
+  background-image: url('assets/img/canonatuel.avif'); 
   background-size: cover;
   background-position: center;
   background-attachment: fixed;

@@ -1,0 +1,21 @@
+{
+  "name": "encuentro-estancieras-2027",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "Milagros",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "vite": "^8.0.16"
+  },
+  "dependencies": {
+    "firebase": "^12.14.0"
+  }
+}
