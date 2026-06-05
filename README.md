@@ -1,6 +1,9 @@
 # 🚙 Encuentro Nacional Estancieras, Jeep y Baqueanos 2027 - San Rafael
 Este proyecto es una aplicación web interactiva diseñada para la gestión y promoción del Encuentro Nacional de Vehículos Clásicos en San Rafael, Mendoza. La aplicación permite centralizar la información logística, el registro de participantes y datos en tiempo real para los asistentes.
 
+<img width="1908" height="998" alt="image" src="https://github.com/user-attachments/assets/f0824a70-0a77-4d7e-96c9-cb866cb1d41f" />
+
+
 # 🚀 Funcionalidades Principales
 Gestión de Inscripciones: Formulario dinámico que captura datos de participantes y vehículos, utilizando localStorage para la persistencia de datos en el cliente.
 
