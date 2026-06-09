@@ -198,3 +198,32 @@ label[for="fotoVehiculo"] {
     50% { opacity: 1; }
     100% { opacity: 0.8; }
 }
+
+/* Estilo para el contenedor del mapa de GNC */
+.map-container img {
+  transition: transform 0.3s ease;
+  cursor: zoom-in;
+}
+
+.map-container img:hover {
+  transform: scale(1.02); /* Se agranda un poquito al pasar el mouse */
+}
+
+/* Estilo del mapa en modo normal */
+#mapaGnc {
+  transition: transform 0.3s ease, filter 0.3s ease;
+  cursor: zoom-in;
+}
+
+#mapaGnc:hover {
+  filter: brightness(1.1);
+  transform: scale(1.01);
+}
+
+/* Estilo automático cuando el mapa entra en Pantalla Completa */
+#mapaGnc:fullscreen {
+  object-fit: contain; /* Evita que la imagen se deforme o se corte */
+  background-color: black; /* Fondo negro profesional de cine */
+  width: 100%;
+  height: 100%;
+}

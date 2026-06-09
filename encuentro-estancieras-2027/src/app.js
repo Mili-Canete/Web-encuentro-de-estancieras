@@ -334,3 +334,24 @@ function mostrarSiguienteParticipante() {
 
 setInterval(mostrarSiguienteParticipante, 5000);
 iniciarCarrusel();
+
+// PANTALLA COMPLETA PARA EL MAPA DE GNC
+window.toggleFullscreenMap = function() {
+    const mapa = document.getElementById("mapaGnc");
+    if (!mapa) return;
+
+    // Si ya está en pantalla completa, sale. Si no, ingresa.
+    if (!document.fullscreenElement) {
+        if (mapa.requestFullscreen) {
+            mapa.requestFullscreen();
+        } else if (mapa.webkitRequestFullscreen) { /* Safari */
+            mapa.webkitRequestFullscreen();
+        } else if (mapa.msRequestFullscreen) { /* IE11 */
+            mapa.msRequestFullscreen();
+        }
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    }
+}
