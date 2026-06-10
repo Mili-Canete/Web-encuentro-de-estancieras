@@ -31,13 +31,15 @@ const backgrounds = [
 
 let bgIndex = 0;
 
-setInterval(() => {
+function cambiarFondo() {
   const appContainer = document.getElementById("app");
   if (appContainer) {
     appContainer.style.backgroundImage = `url(${backgrounds[bgIndex]})`;
     bgIndex = (bgIndex + 1) % backgrounds.length;
   }
-}, 30000);
+}
+cambiarFondo();
+setInterval(cambiarFondo, 30000)
 
 // NAVEGACIÓN (Se expone a window para que funcione el onclick del HTML)
 window.goPage = function(p) {
