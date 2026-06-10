@@ -22,11 +22,11 @@ let page = "home";
 let fotoBase64 = ""; // Variable global para guardar la foto en Base64
 
 const backgrounds = [
-  "assets/img/dunasnihuil.webp",
-  "assets/img/nihuil.jfif",
-  "assets/img/tigre.jpg",
-  "assets/img/canonatuel.avif",
-  "assets/img/reyunos.jpg"
+  "/dunasnihuil.webp",
+  "/nihuil.jfif",
+  "/tigre.jpg",
+  "/canonatuel.avif",
+  "/reyunos.jpg"
 ];
 
 let bgIndex = 0;
